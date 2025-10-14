@@ -119,7 +119,8 @@ export default function LocationManager() {
     closeModal();
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number | undefined) => {
+    if (!id) return;
     if (window.confirm('Are you sure you want to delete this location?')) {
       const { error } = await supabase
         .from('pickup_locations')
@@ -134,7 +135,7 @@ export default function LocationManager() {
     }
   };
 
-  const openModal = (location = null) => {
+  const openModal = (location?: Location | null) => {
     if (location) {
       setEditingLocation(location);
       setFormData({
@@ -179,7 +180,7 @@ export default function LocationManager() {
     }
   };
 
-  const removeNote = (index) => {
+  const removeNote = (index: number) => {
     setFormData({
       ...formData,
       notes: formData.notes.filter((_, i) => i !== index)
@@ -323,7 +324,7 @@ export default function LocationManager() {
                       type="text"
                       value={formData.state}
                       onChange={(e) => setFormData({...formData, state: e.target.value.toUpperCase()})}
-                      maxLength="2"
+                      maxLength={2}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
@@ -418,7 +419,14 @@ export default function LocationManager() {
   );
 }
 
-function LocationCard({ location, onEdit, onDelete, isRecent }) {
+interface LocationCardProps {
+  location: Location;
+  onEdit: () => void;
+  onDelete: () => void;
+  isRecent?: boolean;
+}
+
+function LocationCard({ location, onEdit, onDelete, isRecent }: LocationCardProps) {
   const notes = Array.isArray(location.notes) ? location.notes : [];
   
   return (
