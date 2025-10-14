@@ -1,5 +1,5 @@
 import './App.css'
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { Plus, Edit2, Trash2, X, Search, MapPin, Clock, Phone, FileText } from 'lucide-react';
 
@@ -7,15 +7,27 @@ const supabaseUrl = "https://ybkcxnetozrniwwletrt.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlia2N4bmV0b3pybml3d2xldHJ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk0MDkwMzksImV4cCI6MjA2NDk4NTAzOX0.3kUjWL0OJBV3N5HZDwJf9P4Wr1ER6KXEBJPJtrhEbxk";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+type Location = {
+  id?: number;
+  name: string;
+  address: string;
+  phone: string;
+  open_time: string;
+  close_time: string;
+  city: string;
+  state: string;
+  notes: string[];
+};
+
 export default function LocationManager() {
-  const [locations, setLocations] = useState([]);
-  const [filteredLocations, setFilteredLocations] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [stateFilter, setStateFilter] = useState('all');
-  const [showModal, setShowModal] = useState(false);
-  const [editingLocation, setEditingLocation] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [stateFilter, setStateFilter] = useState<string>('all');
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [editingLocation, setEditingLocation] = useState<Location | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [formData, setFormData] = useState<Location>({
     name: '',
     address: '',
     phone: '',
@@ -25,7 +37,8 @@ export default function LocationManager() {
     state: '',
     notes: []
   });
-  const [newNote, setNewNote] = useState('');
+  const [newNote, setNewNote] = useState<string>('');
+
 
   useEffect(() => {
     fetchLocations();
